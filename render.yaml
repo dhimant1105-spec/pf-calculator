@@ -1,0 +1,18 @@
+# Render blueprint: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: pf-statutory
+    runtime: docker
+    plan: starter            # a persistent disk needs a paid plan
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false          # you type this in the Render dashboard
+    disk:
+      name: pf-data
+      mountPath: /data
+      sizeGB: 1

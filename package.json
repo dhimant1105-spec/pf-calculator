@@ -1,0 +1,15 @@
+{
+  "name": "pf-statutory",
+  "version": "1.0.0",
+  "description": "PF statutory contribution and ECR workspace for multiple companies",
+  "main": "server.js",
+  "private": true,
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/api.test.js"
+  },
+  "dependencies": {
+    "express": "4.21.2"
+  }
+}

@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PF Statutory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div id="gate" class="gate">
+  <!-- Welcome -->
+  <section id="g-welcome">
+    <div class="welcome">
+      <div class="w-copy">
+        <span class="eyebrow">Provident fund · ECR</span>
+        <h1 class="w-title">PF Statutory</h1>
+        <p class="w-lead">Work out MPF, VPF, CPF, EPS and EDLI for every employee, month by month, and produce the ECR file. Each company has its own sign-in and its own records.</p>
+        <div class="btnrow"><button class="btn primary big" type="button" id="go-login">Continue to sign in</button></div>
+        <p class="inline-warn" id="unavail" hidden>The server could not be reached. Check your connection and reload the page.</p>
+        <ul class="w-facts">
+          <li>One workspace per company. Employees, rates and months are never mixed.</li>
+          <li>Every month is saved on its own and the next one starts from zero.</li>
+          <li>The ECR text file is built from the saved month.</li>
+        </ul>
+      </div>
+      <div class="w-slip" aria-hidden="true">
+        <div class="legendlabel">One line of an ECR file</div>
+        <div class="slip">101234567801<span class="sep">#~#</span>ASHA VERMA<span class="sep">#~#</span>18000<span class="sep">#~#</span>15000<span class="sep">#~#</span>15000<span class="sep">#~#</span>15000<span class="sep">#~#</span>1800<span class="sep">#~#</span>1250<span class="sep">#~#</span>550<span class="sep">#~#</span>0<span class="sep">#~#</span>0</div>
+        <p class="cap">UAN, name, gross, EPF wages, EPS wages, EDLI wages, employee EPF, EPS, employer difference, NCP days, refund.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sign in -->
+  <section id="g-login" hidden>
+    <div class="login-card">
+      <button class="btn link back" type="button" id="back-welcome">← Back</button>
+      <div class="panel">
+        <div class="hd"><h2>Company sign in</h2></div>
+        <div class="bd">
+          <form id="login-form" autocomplete="off" style="display:flex;flex-direction:column;gap:14px">
+            <label class="f">Company ID<input type="text" id="l-id" autocapitalize="none" autocorrect="off" spellcheck="false" class="mono"></label>
+            <label class="f">Password<input type="password" id="l-pw" autocomplete="current-password"></label>
+            <div class="err" id="login-err" role="alert"></div>
+            <button class="btn primary" type="submit" id="l-btn">Sign in</button>
+          </form>
+          <hr class="divider">
+          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start">
+            <h3>Administrator</h3>
+            <p class="muted" style="font-size:13px">Only the administrator creates companies and their sign-ins.</p>
+            <form id="admin-form" autocomplete="off" style="display:flex;flex-direction:column;gap:12px;width:100%">
+              <label class="f">Administrator username<input type="text" id="a-user" autocapitalize="none" autocorrect="off" spellcheck="false"></label>
+              <label class="f">Administrator password<input type="password" id="a-pw" autocomplete="current-password"></label>
+              <div class="err" id="admin-err" role="alert"></div>
+              <button class="btn" type="submit" id="a-btn">Sign in as administrator</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Admin console -->
+  <section id="g-admin" hidden>
+    <header class="top">
+      <div>
+        <span class="eyebrow">Administrator</span>
+        <h1 style="margin-top:4px">Companies</h1>
+        <p class="lead">Create a company, give it a sign-in, and switch it off or remove it when it is no longer needed.</p>
+      </div>
+      <button class="btn" type="button" id="admin-out">Sign out</button>
+    </header>
+
+    <div class="panel">
+      <div class="hd"><h2>Administrator account</h2></div>
+      <div class="bd">
+        <form id="acct-form" autocomplete="off">
+          <div class="grid">
+            <label class="f">Username<input type="text" id="ac-user" autocapitalize="none" spellcheck="false"></label>
+            <label class="f">Current password<input type="password" id="ac-cur" autocomplete="current-password"></label>
+            <label class="f">New password <span class="hint">at least 8 characters, blank keeps the current one</span><input type="password" id="ac-new" autocomplete="new-password"></label>
+          </div>
+          <div class="btnrow" style="margin-top:14px"><button class="btn primary" type="submit" id="ac-submit">Save administrator account</button></div>
+        </form>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="hd"><h2>Create a company</h2></div>
+      <div class="bd">
+        <form id="co-form" autocomplete="off">
+          <div class="grid">
+            <label class="f wide">Company name<input type="text" id="co-name" placeholder="Registered name"></label>
+            <label class="f">Company ID <span class="hint">3–30 letters, digits, - or _</span><input type="text" id="co-id" class="mono" autocapitalize="none" spellcheck="false"></label>
+            <label class="f">Password <span class="hint">at least 8 characters</span>
+              <div class="pwbox"><input type="text" id="co-pw" class="mono" autocomplete="off"><button class="btn" type="button" id="co-gen">Generate</button></div>
+            </label>
+          </div>
+          <div class="btnrow" style="margin-top:14px"><button class="btn primary" type="submit" id="co-submit">Create company</button></div>
+        </form>
+      </div>
+      <div class="cred" id="cred" hidden>
+        <b id="cred-title"></b>
+        <div class="mono" id="cred-body"></div>
+        <p class="muted" style="font-size:12px">The password is stored only as a hash and cannot be shown again. Copy it now and send it to the company.</p>
+        <div class="btnrow"><button class="btn" type="button" id="cred-copy">Copy sign-in details</button><button class="btn link" type="button" id="cred-close">Dismiss</button></div>
+      </div>
+    </div>
+
+    <div class="panel" id="pw-panel" hidden>
+      <div class="hd"><h2 id="pw-title">Reset password</h2></div>
+      <div class="bd">
+        <div class="pwbox" style="max-width:480px"><input type="text" id="pw-new" class="mono" aria-label="New password" autocomplete="off"><button class="btn" type="button" id="pw-gen">Generate</button></div>
+        <div class="btnrow" style="margin-top:12px"><button class="btn primary" type="button" id="pw-save">Save new password</button><button class="btn" type="button" id="pw-cancel">Cancel</button></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="hd"><h2>All companies <span class="muted" style="font-weight:400;font-size:13px" id="co-count"></span></h2></div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Company</th><th>Company ID</th><th>Status</th><th>Created</th><th></th></tr></thead>
+          <tbody id="co-rows"></tbody>
+        </table>
+        <div class="empty" id="co-empty" hidden>No companies yet. Create the first one above.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <header class="top">
+    <div>
+      <h1>PF Statutory</h1>
+      <p class="lead">Monthly provident fund contributions and the ECR file. Employees and rates are set up once, each month starts from zero.</p>
+    </div>
+    <div class="brandbar">
+      <span class="badge" id="co-badge"></span>
+      <span class="sync" id="sync">Loading…</span>
+      <button class="btn" type="button" id="signout">Sign out</button>
+      <button class="btn" type="button" id="back-admin" hidden>Back to admin console</button>
+    </div>
+  </header>
+
+  <nav class="nav" id="nav" aria-label="Pages">
+    <a href="#contribution" data-view="contribution">Contribution</a>
+    <a href="#reports" data-view="reports">Reports</a>
+    <a href="#employees" data-view="employees">Employees</a>
+    <a href="#rates" data-view="rates">Rates</a>
+  </nav>
+
+  <!-- ================= CONTRIBUTION ================= -->
+  <section class="view" id="v-contribution">
+    <div class="panel">
+      <div class="hd">
+        <h2>Monthly contribution</h2>
+        <div class="monthbar">
+          <label class="f">Wage month<input type="month" id="wm"></label>
+          <span class="chip" id="status" hidden></span>
+          <span class="muted" style="font-size:12px" id="savestate"></span>
+        </div>
+      </div>
+      <div class="empty" id="c-empty" hidden>
+        <p id="c-empty-text"></p>
+        <div class="btnrow"><button class="btn primary" type="button" id="start">Start this month</button><a class="btn" href="#employees" id="goto-emp" hidden style="text-decoration:none">Go to Employees</a></div>
+      </div>
+      <div id="c-summary" hidden>
+        <div class="totals" id="totals"></div>
+      </div>
+    </div>
+
+    <div id="c-sheet" class="view" hidden>
+      <div class="panel">
+        <div class="hd">
+          <h2>Wage entry</h2>
+          <div class="btnrow" id="draft-actions">
+            <select id="add-emp" aria-label="Add employee from master" style="width:auto;max-width:240px"></select>
+            <button class="btn" type="button" id="add-emp-btn">Add to this month</button>
+            <button class="btn" type="button" id="pick">Upload wages</button>
+            <button class="btn" type="button" id="tpl">Save sheet as CSV</button>
+            <input type="file" id="file" accept=".csv,.xlsx,.xls" hidden>
+          </div>
+        </div>
+        <div class="notice info" id="up-hint" style="margin-bottom:0">
+          <span>Upload a CSV or Excel file with <code class="mono">UAN</code>, <code class="mono">Gross Wages</code>, <code class="mono">PF Wages</code>, <code class="mono">NCP Days</code>, <code class="mono">Refund</code>, <code class="mono">VPF Amount</code>. Blank cells keep what is already entered.</span>
+        </div>
+        <div class="notice" id="warn-note" hidden></div>
+        <div class="tablewrap">
+          <table>
+            <thead id="thead"></thead>
+            <tbody id="rows"></tbody>
+            <tfoot id="foot"></tfoot>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="hd">
+          <h2>ECR text file</h2>
+          <span class="muted mono" style="font-size:12px" id="ecr-name"></span>
+        </div>
+        <div class="bd">
+          <div class="legendlabel">Column order (not written to the file)</div>
+          <div class="slip legend">UAN<span class="sep">#~#</span>Member name<span class="sep">#~#</span>Gross<span class="sep">#~#</span>EPF wages<span class="sep">#~#</span>EPS wages<span class="sep">#~#</span>EDLI wages<span class="sep">#~#</span>EPF (EE)<span class="sep">#~#</span>EPS<span class="sep">#~#</span>EPF−EPS diff (ER)<span class="sep">#~#</span>NCP<span class="sep">#~#</span>Refund</div>
+          <div class="slip" id="slip" tabindex="0" aria-label="ECR text preview"></div>
+          <div class="btnrow" style="margin-top:14px">
+            <button class="btn primary" type="button" id="save-ecr">Save ECR .txt</button>
+            <button class="btn" type="button" id="copy-ecr">Copy text</button>
+            <button class="btn" type="button" id="save-xlsx">Save month as .xlsx</button>
+            <span style="flex:1"></span>
+            <button class="btn" type="button" id="finalise">Finalise month</button>
+            <button class="btn" type="button" id="reopen" hidden>Reopen month</button>
+            <button class="btn" type="button" id="next-month" hidden>Start next month</button>
+            <button class="btn link danger" type="button" id="del-month">Delete month</button>
+          </div>
+          <p class="muted" style="font-size:12px;margin-top:10px" id="final-help"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REPORTS ================= -->
+  <section class="view" id="v-reports" hidden>
+    <div class="panel">
+      <div class="hd">
+        <h2>Month-wise contribution</h2>
+        <div class="btnrow">
+          <label class="f" style="flex-direction:row;align-items:center;gap:8px">Financial year
+            <select id="fy" style="width:auto"></select>
+          </label>
+          <button class="btn" type="button" id="rep-xlsx">Save report .xlsx</button>
+        </div>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead>
+            <tr><th>Month</th><th>Status</th><th class="n">Employees</th><th class="n">PF wages</th><th class="n">Employee share</th><th class="n">EPS</th><th class="n">CPF</th><th class="n">EDLI amount</th><th class="n">NCP days</th><th class="n">Total remittance</th><th></th></tr>
+          </thead>
+          <tbody id="rep-rows"></tbody>
+          <tfoot id="rep-foot"></tfoot>
+        </table>
+        <div class="empty" id="rep-empty" hidden>No months saved yet. Start a month on the Contribution page.</div>
+      </div>
+      <p class="muted" style="font-size:12px;padding:0 16px 14px">Employee share is MPF plus VPF. Total remittance is employee share + EPS + CPF. EDLI amount is shown separately. Draft months use the current rates, finalised months keep the rates they were closed with.</p>
+    </div>
+  </section>
+
+  <!-- ================= EMPLOYEES ================= -->
+  <section class="view" id="v-employees" hidden>
+    <div class="panel">
+      <div class="hd"><h2 id="emp-form-title">Add employee</h2></div>
+      <div class="bd">
+        <form id="eform" autocomplete="off">
+          <div class="grid">
+            <label class="f">UAN <span class="hint">12 digits</span><input type="text" id="e-uan" inputmode="numeric" maxlength="12" class="mono" placeholder="101234567890"></label>
+            <label class="f wide">Member name<input type="text" id="e-name" placeholder="As on the UAN record"></label>
+            <div class="f">Pension member
+              <div class="seg" role="radiogroup" aria-label="Pension member">
+                <input type="radio" name="epen" id="epen-yes" value="1" checked><label for="epen-yes">Yes</label>
+                <input type="radio" name="epen" id="epen-no" value="0"><label for="epen-no">No</label>
+              </div>
+            </div>
+            <label class="f" id="e-mpf-wrap">MPF % <span class="hint">pension rate, blank = rate from Rates</span><input class="num" type="number" min="0" step="0.01" id="e-mpf" inputmode="decimal"></label>
+            <label class="f">Standing VPF ₹ <span class="hint">copied into each new month</span><input class="num" type="number" min="0" step="1" id="e-vpf" value="0" inputmode="numeric"></label>
+            <label class="check"><input type="checkbox" id="e-active" checked>Active</label>
+          </div>
+          <div class="btnrow" style="margin-top:14px">
+            <button class="btn primary" type="submit" id="e-submit">Add employee</button>
+            <button class="btn" type="button" id="e-cancel" hidden>Cancel edit</button>
+          </div>
+        </form>
+        <div class="drop" id="edrop" style="margin-top:18px">
+          <p><b>Bulk upload</b> a CSV or Excel file. Existing UANs are updated, new ones are added.</p>
+          <div class="cols"><code>UAN</code><code>Name</code><code>Pension Member</code><code>VPF Amount</code><code>MPF Rate</code><code>Active</code></div>
+          <p class="muted" style="font-size:12px">Pension Member and Active accept Yes/No, blank means Yes. Blank VPF Amount is 0.</p>
+          <div class="btnrow">
+            <button class="btn" type="button" id="e-pick">Choose file</button>
+            <button class="btn" type="button" id="e-tpl">Save CSV template</button>
+          </div>
+          <input type="file" id="e-file" accept=".csv,.xlsx,.xls" hidden>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="hd">
+        <h2>Employee master <span class="muted" style="font-weight:400;font-size:13px" id="e-count"></span></h2>
+        <input type="search" id="e-search" placeholder="Search name or UAN" aria-label="Search employees" style="width:220px">
+      </div>
+      <div class="notice" id="e-sample" hidden>
+        <span>The first employees listed are examples. Remove them before entering your own.</span>
+        <button class="btn link" type="button" id="e-clear-sample">Remove examples</button>
+      </div>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>UAN</th><th>Member</th><th>Pension</th><th class="n">MPF % override</th><th class="n">Standing VPF ₹</th><th>Status</th><th></th></tr></thead>
+          <tbody id="e-rows"></tbody>
+        </table>
+        <div class="empty" id="e-empty" hidden>No employees yet. Add one above or upload a file.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RATES ================= -->
+  <section class="view" id="v-rates" hidden>
+    <div class="panel">
+      <div class="hd"><h2>Rates and ceilings</h2><span class="muted" id="r-state" style="font-size:12px"></span></div>
+      <div class="bd">
+        <div class="groups">
+          <div class="group">
+            <h3>Contribution rates, on PF wages</h3>
+            <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
+              <label class="f">MPF %<span class="hint">non-pension member</span><input class="num" type="number" step="0.01" min="0" id="r-mpf" inputmode="decimal"></label>
+              <label class="f">MPF %<span class="hint">pension member</span><input class="num" type="number" step="0.01" min="0" id="r-pmpf" inputmode="decimal"></label>
+              <label class="f">EPS %<span class="hint">on EPS wages</span><input class="num" type="number" step="0.01" min="0" id="r-eps" inputmode="decimal"></label>
+              <label class="f">Employer share %<span class="hint">EPF + EPS together</span><input class="num" type="number" step="0.01" min="0" id="r-er" inputmode="decimal"></label>
+              <div class="derived">CPF %<span>employer share − EPS</span><b id="r-cpf"></b></div>
+            </div>
+          </div>
+          <div class="group">
+            <h3>Wage ceilings and EDLI</h3>
+            <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr))">
+              <label class="f">EPS wage ceiling ₹<span class="hint">0 = no ceiling</span><input class="num" type="number" step="1" min="0" id="r-epsceil" inputmode="numeric"></label>
+              <label class="f">EDLI wage ceiling ₹<span class="hint">0 = no ceiling</span><input class="num" type="number" step="1" min="0" id="r-edliceil" inputmode="numeric"></label>
+              <label class="f">EDLI %<span class="hint">employer, on EDLI wages</span><input class="num" type="number" step="0.01" min="0" id="r-edli" inputmode="decimal"></label>
+            </div>
+          </div>
+        </div>
+        <div class="btnrow" style="margin-top:18px">
+          <button class="btn primary" type="button" id="r-save">Save rates</button>
+          <button class="btn" type="button" id="r-reset">Restore statutory defaults</button>
+        </div>
+        <p class="muted" style="font-size:12px;margin-top:10px">VPF is not a rate. It is an amount entered per employee in the Employees page and per month in the wage entry. Draft months use these rates as they stand. A finalised month keeps the rates it was closed with.</p>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="hd"><h2>How each figure is worked out</h2></div>
+      <div class="bd rules">
+        <div><b>MPF</b> = PF wages × MPF %. Non-pension members use the non-pension rate. Pension members use their own MPF % if one is set on the employee, otherwise the pension-member rate.</div>
+        <div><b>VPF</b> = the amount entered for the month, in rupees. The ECR employee column carries MPF + VPF.</div>
+        <div><b>EPS</b> = EPS wages × EPS % for pension members, where EPS wages are PF wages up to the EPS ceiling. Non-pension members have no EPS wages and no EPS.</div>
+        <div><b>CPF</b> (employer, difference column) = PF wages × employer share − EPS. For a pension member on wages up to the ceiling this is 3.67%. A non-pension member has no EPS to deduct, so the whole employer share is CPF.</div>
+        <div><b>EDLI wages</b> = PF wages up to the EDLI ceiling. <b>EDLI amount</b> = EDLI wages × EDLI %. The amount belongs on the challan. The ECR file carries only the wages.</div>
+        <div><b>NCP days</b> are days without pay. They go to the ECR as entered and do not change the wages here. Every amount is rounded to the nearest rupee.</div>
+      </div>
+    </div>
+  </section>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="/vendor/xlsx.full.min.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>
